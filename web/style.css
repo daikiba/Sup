@@ -29,6 +29,7 @@ tr#user1 .colorBox {
 }
 .name {
     width: 40%;
+    height: 100%;
     display: block;
     float: left;
     overflow: hidden;
