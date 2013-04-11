@@ -82,10 +82,18 @@ public class PageController implements Serializable {
     @RequestParam("id") String name,
     @RequestParam(value = "status", required = false) String status,
     @RequestParam(value = "color", required = false) String color){
+        boolean nameChanged = true;
         if (client == null) {
              client = new Client();
         }
-        client.setName(name);
+        else {
+            if (!client.getName().equals(name)) {
+                nameChanged = clients.renameClient(client, name);
+            }
+        }
+        if (nameChanged) {
+            client.setName(name);
+        }
         
         Status newStatus = Status.Unclear;
         try {

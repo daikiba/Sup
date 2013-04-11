@@ -21,12 +21,12 @@ public class AllClients implements Serializable {
     
     public void updateClient(Client c) {
         c.setName(c.getName().replaceAll("[':; ]", ""));
-        if (!listContains(clients, c)) {
+        if (!listContains(clients, c.getName())) {
             clients.add(c);
             System.out.println("++Added new client: " + c.getName());
         }
         else {
-            Client oldData = getClientFromList(clients, c);
+            Client oldData = getClientFromList(clients, c.getName());
             System.out.println("$$Loaded old client: " + c.getName());
             if (oldData != null) {
                 oldData.setStatus(c.getStatus());
@@ -43,11 +43,11 @@ public class AllClients implements Serializable {
         return clients;
     }
     
-    public boolean listContains(List<Client> list, Client client) {
+    public boolean listContains(List<Client> list, String name) {
         boolean containsClient = false;
         
         for(Client c : list) {
-            if (client.getName().equals(c.getName())){
+            if (name.equals(c.getName())){
                 containsClient = true;
                 break;
             }
@@ -56,13 +56,23 @@ public class AllClients implements Serializable {
         return containsClient;
     }
     
-    public Client getClientFromList(List<Client> list, Client client) {
+    public Client getClientFromList(List<Client> list, String name) {
         for(Client c : list) {
-            if (client.getName().equals(c.getName())){
+            if (name.equals(c.getName())){
                 return c;
             }
         }
         return null;
+    }
+    
+    public boolean renameClient(Client c, String newName) {
+        newName = newName.replaceAll("['\\(\\)\\}\\{:; ]", "");
+        Client oldClient = getClientFromList(clients, newName);
+        if (oldClient != null && !listContains(clients, newName)) {
+            oldClient.setName(newName);
+            return true;
+        }
+        return false;
     }
     
     public int getSize() {

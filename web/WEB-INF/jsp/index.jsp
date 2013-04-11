@@ -17,7 +17,7 @@
         <div id="wrap">       
             <h1 id="h1">Status Wall</h1>
 
-            <form class="form-inline" id="loginForm">
+            <form class="form-inline" id="loginForm" onsubmit="return false;">
                 <div class="control-group">
                     <c:set var="userNameString" value="${myName}"></c:set>
                     <c:set var="userColorString" value="${myColor}"></c:set>
@@ -34,7 +34,7 @@
                         <option>Sleep</option>
                     </select>
                     <input id="color" type="text" class="input-small" placeholder="${myColor}" <c:if test='<%=!userColorString.equals("99FFAA") %>'>value="${myColor}"</c:if>>
-                    <button class="btn btn-primary" onclick="addMyInfo(this.form);">update</button>
+                    <button type="submit" class="btn btn-primary" onclick="addMyInfo(this.form);">update</button>
                 </div>
             </form>
 

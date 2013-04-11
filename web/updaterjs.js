@@ -14,6 +14,7 @@ function addMyInfo() {
     req.open("GET", saveurl, true);
     req.onreadystatechange = refreshClients; // will be performed when above is complete
     req.send(null);
+    return false;
 }
 
 function initRequest() {
