@@ -22,15 +22,15 @@ public class Client implements Serializable {
     }
 
     public String getId() {
-        return id;
+        return HtmlUtils.htmlEscape(id);
     }
 
     public void setId(String id) {
         id = id.replaceAll("[':; ]", "");
-        id = HtmlUtils.htmlEscape(id);
         if (id.length() > 12) {
             id = id.substring(0, 12);
         }
+        id = HtmlUtils.htmlEscape(id);
         this.id = id;
     }
     
