@@ -20,20 +20,9 @@ public class AllClients implements Serializable {
     }
     
     public void updateClient(Client c) {
-        c.setName(c.getName().replaceAll("[':; ]", ""));
-        if (!listContains(clients, c.getName())) {
+        if (!listContains(clients, c.getId())) {
             clients.add(c);
-            System.out.println("++Added new client: " + c.getName());
-        }
-        else {
-            Client oldData = getClientFromList(clients, c.getName());
-            System.out.println("$$Loaded old client: " + c.getName());
-            if (oldData != null) {
-                oldData.setStatus(c.getStatus());
-            }
-            else {
-                System.out.println("Something's wrong with the client list..");
-            }
+            System.out.println("++Added new client: " + c.getId());
         }
     }
     
@@ -56,9 +45,16 @@ public class AllClients implements Serializable {
         return containsClient;
     }
     
+    public boolean containsID(Client c) {
+        for (Client cl : clients) {
+            if (c.getId().equalsIgnoreCase(cl.getId())) return true;
+        }
+        return false;
+    }
+    
     public Client getClientFromList(List<Client> list, String name) {
         for(Client c : list) {
-            if (name.equals(c.getName())){
+            if (name.equals(c.getId())){
                 return c;
             }
         }
@@ -66,8 +62,7 @@ public class AllClients implements Serializable {
     }
     
     public boolean renameClient(Client c, String newName) {
-        newName = newName.replaceAll("['\\(\\)\\}\\{:; ]", "");
-        Client oldClient = getClientFromList(clients, newName);
+        Client oldClient = getClientFromList(clients, c.getId());
         if (oldClient != null && !listContains(clients, newName)) {
             oldClient.setName(newName);
             return true;

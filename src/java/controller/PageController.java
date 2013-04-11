@@ -55,8 +55,11 @@ public class PageController implements Serializable {
         for(Client c : clients.getClients()) {
             sb.append("<client>");
             sb.append("<id>");
-            sb.append(c.getName());
+            sb.append(c.getId());
             sb.append("</id>");
+            sb.append("<name>");
+            sb.append(c.getName());
+            sb.append("</name>");
             sb.append("<status>");
             sb.append(c.getStatus());
             sb.append("</status>");
@@ -78,21 +81,22 @@ public class PageController implements Serializable {
     }
     
     @RequestMapping("/savemyinfo.htm")
-    public String usersave(Model model,
+    public void usersave(Model model,
     @RequestParam("id") String name,
     @RequestParam(value = "status", required = false) String status,
-    @RequestParam(value = "color", required = false) String color){
-        boolean nameChanged = true;
+    @RequestParam(value = "color", required = false) String color,
+    HttpServletResponse response) throws IOException {
         if (client == null) {
              client = new Client();
+             client.setId(name);
+             if (clients.containsID(client)) {
+                 client = null;
+                 return;
+             }
+             client.setName(name);
         }
-        else {
-            if (!client.getName().equals(name)) {
-                nameChanged = clients.renameClient(client, name);
-            }
-        }
-        if (nameChanged) {
-            client.setName(name);
+        if (!name.equals(client.getName())) {
+            clients.renameClient(client, name);
         }
         
         Status newStatus = Status.Unclear;
@@ -119,7 +123,10 @@ public class PageController implements Serializable {
         }
              
         clients.updateClient(client);
-        return "save";
+        
+        response.setContentType("text/xml");
+        response.setHeader("Cache-Control", "no-cache");
+        response.getWriter().write("<ok />");
     }
     
     public int getValueForHex3(String hex) {

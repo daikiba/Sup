@@ -38,9 +38,7 @@
                 </div>
             </form>
 
-            <div id="people">
-
-            </div>
+            <div id="people"></div>
 
 
         </div>
@@ -52,11 +50,6 @@
             }
             checkForUpdates();
             updateTimer = setInterval(checkForUpdates, 10000);
-            //document.ready(function() {
-                //toCreateDiv("ali", "zzz", "00FF99");
-                //toCreateDiv("nico", "häxing", "99FF00");
-                //toCreateDiv("heq", "häxing", "0099FF");
-            //});
         </script>
 
     </body>

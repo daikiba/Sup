@@ -50,9 +50,11 @@ function parseMessages(responseXML) {
             for (loop = 0; loop < allClients.childNodes.length; loop++) {
                 var clientRow = allClients.childNodes[loop];
                 var clientID = clientRow.getElementsByTagName("id")[0];
+                var clientName = clientRow.getElementsByTagName("name")[0];
                 var clientStatus = clientRow.getElementsByTagName("status")[0];
                 var clientColor = clientRow.getElementsByTagName("color")[0];
                 toCreateDiv(clientID.childNodes[0].nodeValue,
+                    clientName.childNodes[0].nodeValue,
                     clientStatus.childNodes[0].nodeValue,
                     clientColor.childNodes[0].nodeValue);
             }
@@ -60,7 +62,8 @@ function parseMessages(responseXML) {
     }
 }
 
-function toCreateDiv(userName, userStatus, userColor) {
+function toCreateDiv(userID, userName, userStatus, userColor) {
+    var uID = userID.toString();
     var uName = userName.toString();
     var uStatus = userStatus.toString();
     var uColor = userColor.toString();
@@ -69,14 +72,13 @@ function toCreateDiv(userName, userStatus, userColor) {
     m = currentDate.getMinutes();
     s = currentDate.getSeconds();
         
-    if (!document.getElementById(uName)) {
+    if (!document.getElementById(uID)) {
         halp = document.createElement('div');
-        halp.setAttribute('id', uName);
+        halp.setAttribute('id', uID);
         halp.setAttribute('class', 'userRow');
 
         colorBox = document.createElement('div');
         colorBox.setAttribute('class', 'colorBox');
-        //colorBox.style.backgroundColor = '#0099ff';
         colorBox.style.backgroundColor = '#' + uColor;
 
         nameDiv = document.createElement('div');
@@ -88,27 +90,24 @@ function toCreateDiv(userName, userStatus, userColor) {
         timeDiv = document.createElement('div');
         timeDiv.setAttribute('class', 'time');
 
-        document.getElementById('people').appendChild(halp);
         halp.appendChild(colorBox);
         halp.appendChild(nameDiv);
         halp.appendChild(statusDiv);
         halp.appendChild(timeDiv);
 
-        //halp.getElementsByClassName('colorBox')[0].innerHTML = "";
         halp.getElementsByClassName('name')[0].innerHTML = uName;
         halp.getElementsByClassName('status')[0].innerHTML = uStatus;
-        /*halp.getElementsByClassName('time')[0].innerHTML =
-                (h < 10 ? '0' + h + ':' : h + ':') +
-                (m < 10 ? '0' + m + ':' : m + ':') +
-                (s < 10 ? '0' + s : s);*/
 
         document.getElementById('people').appendChild(halp);
 
     } else {
-        halp = document.getElementById(uName);
+        halp = document.getElementById(uID);
         var changed = false;
         
-        halp.getElementsByClassName('name')[0].innerHTML = uName; // Name can't change so this is not really needed..
+        if (halp.getElementsByClassName('name')[0].innerHTML !== uName) {
+            changed = true;
+            halp.getElementsByClassName('name')[0].innerHTML = uName;
+        }
         oldColor = halp.getElementsByClassName('colorBox')[0].style.backgroundColor;
         if (getIntsFromRgb(oldColor).r !== hexToRgb(uColor).r ||
                 getIntsFromRgb(oldColor).g !== hexToRgb(uColor).g ||
