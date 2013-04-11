@@ -17,6 +17,7 @@ import java.io.Serializable;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.util.HtmlUtils;
 
 /**
  *
@@ -89,15 +90,18 @@ public class PageController implements Serializable {
         if (client == null) {
              client = new Client();
              client.setId(name);
-             if (clients.containsID(client)) {
+             if (clients.listContainsID(client.getId())) {
                  client = null;
                  return;
              }
              client.setName(name);
         }
-        if (!name.equals(client.getName())) {
-            clients.renameClient(client, name);
+        else {
+            client.setName(name);
         }
+//        if (!client.getId().equals(client.getName())) {
+//            clients.renameClient(client, client.getName());
+//        }
         
         Status newStatus = Status.Unclear;
         try {
@@ -121,7 +125,7 @@ public class PageController implements Serializable {
         else {
             client.setColor(Color.yellow);
         }
-             
+        
         clients.updateClient(client);
         
         response.setContentType("text/xml");

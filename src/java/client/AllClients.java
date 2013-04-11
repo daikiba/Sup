@@ -20,9 +20,12 @@ public class AllClients implements Serializable {
     }
     
     public void updateClient(Client c) {
-        if (!listContains(clients, c.getId())) {
+        if (!listContainsID(c.getId())) {
             clients.add(c);
             System.out.println("++Added new client: " + c.getId());
+        }
+        else {
+            System.out.println("Updating..");
         }
     }
     
@@ -32,22 +35,17 @@ public class AllClients implements Serializable {
         return clients;
     }
     
-    public boolean listContains(List<Client> list, String name) {
-        boolean containsClient = false;
-        
-        for(Client c : list) {
-            if (name.equals(c.getName())){
-                containsClient = true;
-                break;
-            }
+    public boolean listContainsName(String name) {
+        for(Client c : clients) {
+            if (name.equalsIgnoreCase(c.getName())) return true;
         }
         
-        return containsClient;
+        return false;
     }
     
-    public boolean containsID(Client c) {
+    public boolean listContainsID(String cS) {
         for (Client cl : clients) {
-            if (c.getId().equalsIgnoreCase(cl.getId())) return true;
+            if (cS.equals(cl.getId())) return true;
         }
         return false;
     }
@@ -63,7 +61,7 @@ public class AllClients implements Serializable {
     
     public boolean renameClient(Client c, String newName) {
         Client oldClient = getClientFromList(clients, c.getId());
-        if (oldClient != null && !listContains(clients, newName)) {
+        if (oldClient != null && !listContainsName(newName)) {
             oldClient.setName(newName);
             return true;
         }

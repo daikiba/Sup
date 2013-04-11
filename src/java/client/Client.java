@@ -6,6 +6,7 @@ package client;
 
 import java.awt.Color;
 import java.io.Serializable;
+import org.springframework.web.util.HtmlUtils;
 
 public class Client implements Serializable {
     private String id;
@@ -26,14 +27,19 @@ public class Client implements Serializable {
 
     public void setId(String id) {
         id = id.replaceAll("[':; ]", "");
+        id = HtmlUtils.htmlEscape(id);
+        if (id.length() > 12) {
+            id = id.substring(0, 12);
+        }
         this.id = id;
     }
     
     public String getName() {
-        return name;
+        return HtmlUtils.htmlEscape(name);
     }
 
     public void setName(String name) {
+        name = HtmlUtils.htmlEscape(name);
         this.name = name;
     }
 
