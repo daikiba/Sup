@@ -24,6 +24,5 @@
     
     <bean id="client" class="client.Client" />
     <bean id="clients" class="client.AllClients" />
-    <!-- <bean id="cData" class="client.Client" /> -->
 
 </beans>
