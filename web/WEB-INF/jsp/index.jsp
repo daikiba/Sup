@@ -49,7 +49,7 @@
                 refreshClients();
             }
             checkForUpdates();
-            updateTimer = setInterval(checkForUpdates, 10000);
+            updateTimer = setInterval(checkForUpdates, 3000);
         </script>
 
     </body>

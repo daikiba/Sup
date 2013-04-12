@@ -31,6 +31,10 @@ public class Client implements Serializable {
             id = id.substring(0, 12);
         }
         id = HtmlUtils.htmlEscape(id);
+        if (id.equals("")) {
+            Integer rand = new Integer((int)(Math.random() * 2147483647.0D));
+            id = (Integer.toHexString(rand.hashCode()));
+        }
         this.id = id;
     }
     
@@ -40,6 +44,9 @@ public class Client implements Serializable {
 
     public void setName(String name) {
         name = HtmlUtils.htmlEscape(name);
+        if (name.equals("")) {
+            name = "&nbsp;";
+        }
         this.name = name;
     }
 
