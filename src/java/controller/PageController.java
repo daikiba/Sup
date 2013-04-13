@@ -17,7 +17,6 @@ import java.io.Serializable;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.util.HtmlUtils;
 
 /**
  *
@@ -37,7 +36,7 @@ public class PageController implements Serializable {
     @RequestMapping("/index.htm")
     public String frontpage(Model model) {
         if (client != null) {
-            model.addAttribute("myName", client.getName());
+            model.addAttribute("myName", client.getNameForTextField());
             model.addAttribute("myColor", client.getColor());
             model.addAttribute("myStatus", client.getStatus());
         }
@@ -46,13 +45,35 @@ public class PageController implements Serializable {
             model.addAttribute("myColor", "99FFAA");
             model.addAttribute("myStatus", "Home");
         }
+        model.addAttribute("version", "0.13");
         return "index";
     }
     
     @RequestMapping("/userxml.htm")
-    public void xmlOut(HttpServletResponse response) throws IOException {
+    public void xmlOut(HttpServletResponse response, @RequestParam(value = "xml", required = false) String xmlIdS) throws IOException {
+        if (xmlIdS != null) {
+            int xmlId = 0;
+            int timeoutCounter = 600; // 600 = 1 min
+            try {
+                xmlId = Integer.parseInt(xmlIdS);
+            }
+            catch(Exception ex) { }
+            if (xmlId < 0) xmlId = 0;
+            else if (xmlId > AllClients.getLatestXmlId()) xmlId = AllClients.getLatestXmlId();
+            while (xmlId == AllClients.getLatestXmlId() && timeoutCounter > 0) {
+                try {
+                    Thread.sleep(100);
+                    timeoutCounter--;
+                }
+                catch(Exception ex) {}
+            }
+        }
+        System.out.println("Serving page..");
         StringBuffer sb = new StringBuffer();
         sb.append("<clients>");
+        sb.append("<xml-id>");
+        sb.append(AllClients.getLatestXmlId());
+        sb.append("</xml-id>");
         for(Client c : clients.getClients()) {
             sb.append("<client>");
             sb.append("<id>");
@@ -70,9 +91,13 @@ public class PageController implements Serializable {
             sb.append("</client>");
         }
         sb.append("</clients>");
-        response.setContentType("text/xml");
-        response.setHeader("Cache-Control", "no-cache");
-        response.getWriter().write(sb.toString());
+        try {
+            response.setContentType("text/xml");
+            response.setHeader("Cache-Control", "no-cache");
+            response.getWriter().write(sb.toString());
+            System.out.println("Page Served!");
+        }
+        catch(Exception ex) { System.err.println("user has disconnected.."); }
     }
     
     @RequestMapping("/userlist.htm")

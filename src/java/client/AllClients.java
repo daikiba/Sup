@@ -14,9 +14,11 @@ import java.util.ArrayList;
  */
 public class AllClients implements Serializable {
     private static List<Client> clients;
+    private static int latestXml;
     
     public AllClients() {
          clients = new ArrayList<Client>();
+         latestXml = 1;
     }
     
     public void updateClient(Client c) {
@@ -27,6 +29,12 @@ public class AllClients implements Serializable {
         else {
             System.out.println("Updating..");
         }
+        latestXml++;
+        System.out.println("Server clientxml version: " + latestXml);
+    }
+    
+    public static int getLatestXmlId() {
+        return latestXml;
     }
     
     public void setClients() { }

@@ -15,7 +15,7 @@
 
     <body>
         <div id="wrap">       
-            <h1 id="h1">Status Wall</h1>
+            <h1 id="h1">Status Wall v.${version}</h1>
 
             <form class="form-inline" id="loginForm" onsubmit="return false;">
                 <div class="control-group">
@@ -42,14 +42,17 @@
 
 
         </div>
-        <footer>by Ali Abdul-Karim, Nico Hämäläinen, Henri Levälampi @ 2013</footer>
+        <footer>by Ali Abdul-Karim, Nico H&auml;m&auml;l&auml;inen, Henri Lev&auml;lampi @ 2013</footer>
 
         <script>
             function checkForUpdates() {
-                refreshClients();
+                if (isCheckFinished()) {
+                    //alert("Requesting new page with id: " + latestKnownXML);
+                    refreshClients();
+                }
             }
             checkForUpdates();
-            updateTimer = setInterval(checkForUpdates, 3000);
+            updateTimer = setInterval(checkForUpdates, 100);
         </script>
 
     </body>

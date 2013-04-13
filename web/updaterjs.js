@@ -1,19 +1,35 @@
+var latestKnownXML = 0;
+var lastCheckFinished = true;
+
 function refreshClients() {
-    var url = "userxml.htm";
+    setCheckUnfinished();
+    var url = "userxml.htm?xml=" + latestKnownXML;
     req = initRequest();
     req.open("GET", url, true);
     req.onreadystatechange = callback;
     req.send(null);
 }
 
+function isCheckFinished() {
+    return true === lastCheckFinished;
+}
+
+function setCheckFinished() {
+    lastCheckFinished = true;
+}
+
+function setCheckUnfinished() {
+    lastCheckFinished = false;
+}
+
 function addMyInfo() {
     var saveurl = "savemyinfo.htm?id=" + escape(document.getElementById('name').value) +
             "&status=" + escape(document.getElementById('status').value) +
             "&color=" + escape(document.getElementById('color').value);
-    req = initRequest();
-    req.open("GET", saveurl, true);
-    req.onreadystatechange = refreshClients; // will be performed when above is complete
-    req.send(null);
+    updateReq = initRequest();
+    updateReq.open("GET", saveurl, true);
+    //req.onreadystatechange = checkForUpdates; // will be performed when above is complete
+    updateReq.send(null);
     return false;
 }
 
@@ -32,8 +48,16 @@ function initRequest() {
 function callback() {
     if (req.readyState === 4) {
         if (req.status === 200) {
+            //alert("Loaded page, ok.");
             parseMessages(req.responseXML);
+            setCheckFinished();
         }
+        //else {
+        //    alert("Couldn't process, status=" + req.status);
+        //}
+    }
+    else {
+        //alert("faulty state" + req.readyState);
     }
 }
 
@@ -45,9 +69,10 @@ function parseMessages(responseXML) {
     } else {
 
         var allClients = responseXML.getElementsByTagName("clients")[0];
+        latestKnownXML = allClients.childNodes[0].childNodes[0].nodeValue;
 
         if (allClients.childNodes.length > 0) {
-            for (loop = 0; loop < allClients.childNodes.length; loop++) {
+            for (loop = 1; loop < allClients.childNodes.length; loop++) {
                 var clientRow = allClients.childNodes[loop];
                 var clientID = clientRow.getElementsByTagName("id")[0];
                 var clientName = clientRow.getElementsByTagName("name")[0];
