@@ -53,7 +53,7 @@ public class PageController implements Serializable {
     public void xmlOut(HttpServletResponse response, @RequestParam(value = "xml", required = false) String xmlIdS) throws IOException {
         if (xmlIdS != null) {
             int xmlId = 0;
-            int timeoutCounter = 600; // 600 = 1 min
+            int timeoutCounter = 15*600; // 600 = 1 min
             try {
                 xmlId = Integer.parseInt(xmlIdS);
             }

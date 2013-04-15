@@ -78,10 +78,19 @@ function parseMessages(responseXML) {
                 var clientName = clientRow.getElementsByTagName("name")[0];
                 var clientStatus = clientRow.getElementsByTagName("status")[0];
                 var clientColor = clientRow.getElementsByTagName("color")[0];
-                toCreateDiv(clientID.childNodes[0].nodeValue,
-                    clientName.childNodes[0].nodeValue,
-                    clientStatus.childNodes[0].nodeValue,
-                    clientColor.childNodes[0].nodeValue);
+                if (clientID.childNodes[0] !== undefined)
+                    {
+                    if (clientName.childNodes[0] !== undefined)
+                        toCreateDiv(clientID.childNodes[0].nodeValue,
+                            clientName.childNodes[0].nodeValue,
+                            clientStatus.childNodes[0].nodeValue,
+                            clientColor.childNodes[0].nodeValue);
+                    else 
+                        toCreateDiv(clientID.childNodes[0].nodeValue,
+                            "",
+                            clientStatus.childNodes[0].nodeValue,
+                            clientColor.childNodes[0].nodeValue);
+                    }
             }
         }
     }
