@@ -31,15 +31,20 @@ public class Client implements Serializable {
             id = id.substring(0, 12);
         }
         id = HtmlUtils.htmlEscape(id);
-        if (id.equals("")) {
+        if (id.equals("id")) {
             Integer rand = new Integer((int)(Math.random() * 2147483647.0D));
-            id = (Integer.toHexString(rand.hashCode()));
+            id += (Integer.toHexString(rand.hashCode()));
         }
         this.id = id;
     }
     
     public String getName() {
-        return name;
+        if (!name.equals("")) {
+            return name;
+        }
+        else {
+            return "-";
+        }
     }
 
     public void setName(String name) {

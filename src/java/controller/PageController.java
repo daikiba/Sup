@@ -69,7 +69,7 @@ public class PageController implements Serializable {
             }
         }
         System.out.println("Serving page..");
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append("<clients>");
         sb.append("<xml-id>");
         sb.append(AllClients.getLatestXmlId());
@@ -106,6 +106,14 @@ public class PageController implements Serializable {
         return "userlist";
     }
     
+    @RequestMapping("/rresett.htm")
+    public void resetUsers(HttpServletResponse response) throws IOException {
+        clients.clear();
+        response.setContentType("text/xml");
+        response.setHeader("Cache-Control", "no-cache");
+        response.getWriter().write("<ok />");
+    }
+    
     @RequestMapping("/savemyinfo.htm")
     public void usersave(Model model,
     @RequestParam("id") String name,
@@ -114,12 +122,14 @@ public class PageController implements Serializable {
     HttpServletResponse response) throws IOException {
         if (client == null) {
              client = new Client();
-             client.setId(name);
-             if (clients.listContainsID(client.getId())) {
-                 client = null;
-                 return;
-             }
+             client.setId("id"+name.toLowerCase());
              client.setName(name);
+             if (clients.listContainsID(client.getId())) {
+                 client = clients.getClientByID(client.getId());
+             }
+             else if (clients.listContainsName(client.getName())) {
+                 client = clients.getClientByName(client.getName());
+             }
         }
         else {
             client.setName(name);

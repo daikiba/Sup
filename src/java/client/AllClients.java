@@ -37,7 +37,14 @@ public class AllClients implements Serializable {
         return latestXml;
     }
     
-    public void setClients() { }
+    public void setClients() {
+        
+    }
+    
+    public void clear() { 
+        clients.clear();
+        latestXml = 1;
+    }
     
     public List<Client> getClients() {
         return clients;
@@ -56,6 +63,20 @@ public class AllClients implements Serializable {
             if (cS.equals(cl.getId())) return true;
         }
         return false;
+    }
+    
+    public Client getClientByID(String cS) {
+        for (Client cl : clients) {
+            if (cS.equals(cl.getId())) return cl;
+        }
+        return null;
+    }
+    
+    public Client getClientByName(String name) {
+        for (Client cl : clients) {
+            if (name.equals(cl.getName())) return cl;
+        }
+        return null;
     }
     
     public Client getClientFromList(List<Client> list, String name) {
